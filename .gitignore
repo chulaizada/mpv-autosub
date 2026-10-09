@@ -1,0 +1,22 @@
+# ---- 编辑器 / IDE ----
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ---- 操作系统 ----
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# ---- 日志 ----
+*.log
+
+# ---- 临时 / 备份文件 ----
+*.tmp
+*.bak
+*~
+
+# ---- 本地字幕配置（若存在，内含凭据，切勿提交）----
+auto-sub.conf
+script-opts/
