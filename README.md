@@ -20,15 +20,18 @@
 
 ### Portable 模式
 
-把 `autosub.lua` 放进 mpv 程序目录下的 `scripts` 文件夹：
+适用于便携版 mpv：程序目录下、与 `mpv.exe` 同级存在 `portable_config` 文件夹。
+把 `autosub.lua` 放进 `portable_config` 里的 `scripts` 文件夹：
 
 ```
-<mpv 目录>\portable_config\scripts\autosub.lua
+<mpv 程序目录>\portable_config\scripts\autosub.lua
 ```
+
+例如 mpv 程序目录是 `D:\mpv`，完整路径就是 `D:\mpv\portable_config\scripts\autosub.lua`。
 
 ### 非 Portable（安装版）
 
-把 `autosub.lua` 放进用户配置目录：
+适用于安装版 mpv（程序目录下没有 `portable_config` 文件夹），配置放在用户目录：
 
 ```
 %APPDATA%\mpv\scripts\autosub.lua
@@ -36,7 +39,8 @@
 
 即 `C:\Users\<用户名>\AppData\Roaming\mpv\scripts\autosub.lua`（目录不存在请手动创建）。
 
-放好后重启 mpv 即可。
+> mpv 会自动判断用哪种：程序目录下**存在** `portable_config` 就用 Portable 模式，**不存在**就用上面这个用户目录。
+> 放好后重启 mpv 即可。
 
 ## 配置
 
@@ -97,10 +101,12 @@ local o = {
 ## 常见问题
 
 **Q：屏幕提示「未填写 OpenSubtitles 凭据」？**
-A：打开 `autosub.lua`，填写文件开头的 `os_api_key` / `os_username` / `os_password`。
+A：打开 `autosub.lua`，填写文件开头的 `os_api_key` / `os_username` / `os_password`。该提示会停留在屏幕上，不会再显示「没找到中文字幕」。
 
 **Q：提示「登录失败」？**
-A：检查用户名、密码、API Key 是否正确，以及账号是否已激活。OpenSubtitles 免费账号有每日下载配额，用尽后需等待或升级。
+A：检查用户名、密码、API Key 是否正确，以及账号是否已激活。该提示同样会停留在屏幕上。OpenSubtitles 免费账号有每日下载配额，用尽后需等待或升级。
+
+> 换言之：看到「没找到中文字幕」说明确实执行了搜索，只是没有命中；凭据/登录有问题时则直接显示原因，不再叠加这句。
 
 **Q：一直找不到字幕？**
 A：可能原因：文件名不含片名/年份、视频短于 `min_duration`、或该片确实没有中文字幕。可手动把文件名规范成「片名 + 年份」后按 `m` 重试。

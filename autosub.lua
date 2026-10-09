@@ -690,7 +690,7 @@ local function make_cn_queries(cn, year)
 end
 
 local function have_credentials()
-    if o.os_api_key == "" or o.os_username == "" or o.os_password == "" then
+    if (o.os_api_key or "") == "" or (o.os_username or "") == "" or (o.os_password or "") == "" then
         log("未填写 OpenSubtitles 凭据，请修改本脚本开头的 os_api_key / os_username / os_password")
         return false
     end
@@ -699,11 +699,12 @@ end
 
 -- ============ ② moviehash → ③ 标题搜索 ============
 local function try_opensubtitles(video_path, sources, dest)
-    if not have_credentials() then return false end
+    -- 凭据缺失 / 登录失败返回 nil，主流程据此不再补提示
+    if not have_credentials() then return end
     local token = os_login()
     if not token then
         log("OpenSubtitles 登录失败，请检查用户名 / 密码 / API Key")
-        return false
+        return
     end
     log("OpenSubtitles 登录成功")
 
@@ -824,13 +825,13 @@ local function process()
 
     dbg("候选来源: " .. table.concat(sources, " | "))
 
-    if try_opensubtitles(path, sources, dest) then
+    local r = try_opensubtitles(path, sources, dest)
+    if r then
         log("OpenSubtitles 已下载")
         mp.commandv("rescan_external_files")
-        return
+    elseif r == false then
+        log("没找到中文字幕")
     end
-
-    log("没找到中文字幕")
 end
 
 mp.register_event("file-loaded", process)
